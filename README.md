@@ -17,7 +17,7 @@ AWSD - Movement
 F- Place Flag and Remove Flag
 Enter - Action
 R - Reset 
-P - Puse 
+P - Pause 
 T - Switch Mode
 
 ## Author

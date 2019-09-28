@@ -11,13 +11,7 @@ import minesweepers.GUI.Screen;
 public class WonMenu extends Menu{
     private int selection = 0;
     private String[] options = {"Next Level", "Exit"};
-    public int seconds;
-    public int score;
-    public int level;
-    public WonMenu(int level,int seconds, int score){
-        this.level = level;
-        this.seconds = seconds;
-        this.seconds = score;
+    public WonMenu(){
     }
     //Tick 
     @Override
@@ -56,9 +50,9 @@ public class WonMenu extends Menu{
     public void render(Screen screen){
         screen.clear(0);
         String title = "You Won";
-        String levelm = "Level " + level;
-        String scorem = "Score " + score;
-        String timem = "Time " + seconds;
+        String levelm = "Level " + game.levelNumber;
+        String scorem = "Score " + game.score;
+        String timem = "Time " + game.time;
         
         Font.draw(title, screen, (screen.width - title.length() * 8) / 2, 4 * 8, Colour.get(000, 555, 555, 555));
         Font.draw(levelm , screen,(screen.width - levelm.length() * 8) / 2, 6 * 8, Colour.get(000, 555, 555, 555));

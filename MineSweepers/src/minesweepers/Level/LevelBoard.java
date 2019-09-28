@@ -96,24 +96,27 @@ public class LevelBoard extends Level{
                     cover[selectedX][selectedY] = 1;
                     //Add to score
                     if(board[selectedX][selectedY] == 1){
-                        game.score += 1;
+                        game.score += 1 + game.levelNumber;
                     }
                     
                     if(board[selectedX][selectedY] == 2){
-                        game.score += 2;
+                        game.score += 2 + game.levelNumber;
                     }
                     
                     if(board[selectedX][selectedY] == 3){
-                        game.score += 3;
+                        game.score += 3 + game.levelNumber;
                     }
                     
                     if(board[selectedX][selectedY] == 4){
-                        game.score += 4;
+                        game.score += 4 + game.levelNumber;
                     }
-                    //Update game score
-                    game.score++;
-                    //Uncover
-                    unCover(selectedX, selectedY);
+                    //Check all 0 values
+                    if(board[selectedX][selectedY] == 0){
+                       //Update game score
+                       game.score++;
+                       //Uncover
+                       unCover(selectedX, selectedY);
+                    }
                 }
             }
         } 
@@ -126,7 +129,7 @@ public class LevelBoard extends Level{
     @Override
     public void renderBoard(Screen screen){
          if(game.mode == false){
-         //Board
+         //Board Numbers
          for(int y = 0; y < height; y++){
               for(int x = 0; x < width; x++){
                   if(board[x][y] == 0){
@@ -150,40 +153,29 @@ public class LevelBoard extends Level{
                   }
             }
          }
-         //Mines
+         //Board
          for(int y = 0; y < height; y++){
               for(int x = 0; x < width; x++){
+                  //Mines
                   if(mine[x][y] == 1){
-                    screen.render((x * 8) + 50,(y * 8) + 50, 16, Colour.get(000, 500, 000, 500), 0);
+                      screen.render((x * 8) + 50,(y * 8) + 50, 16, Colour.get(000, 500, 000, 500), 0);
                   }
-              }
-         }
-         //Cover
-         for(int y = 0; y < height; y++){
-              for(int x = 0; x < width; x++){
+                  //Cover
                   if(cover[x][y] != 1){  
-                        screen.render((x * 8) + 50, (y * 8) + 50, 9, Colour.get(500, 500, 000, 000), 0);
-                   }
-              }
-         }
-         //Flag
-         for(int y = 0; y < height; y++){
-              for(int x = 0; x < width; x++){
-                  if(flag[x][y] == 1){
-                      screen.render((x * 8) + 50, (y * 8) + 50, 8, Colour.get(000, 000, 000, 500), 0);
+                       screen.render((x * 8) + 50, (y * 8) + 50, 9, Colour.get(500, 500, 000, 000), 0);
                   }
-              }
-         }       
-         //Selection
-         for(int y = 0; y < height; y++){
-              for(int x = 0; x < width; x++){
+                  //Flag
+                  if(flag[x][y] == 1){
+                       screen.render((x * 8) + 50, (y * 8) + 50, 8, Colour.get(000, 000, 000, 500), 0);
+                  }
+                  //Selection
                   if(selectedX == x && selectedY == y && game.alive == true){
-                      screen.render((x * 8) + 50, (y * 8) + 50, 7, Colour.get(-1, 555, 555, 555), 0);
+                       screen.render((x * 8) + 50, (y * 8) + 50, 7, Colour.get(-1, 555, 555, 555), 0);
                   }
               }
          }
          } else {
-         //Comb Board
+         //Comb Board Number
          for(int y = 0; y < height; y++){
               for(int x = 0; x < width; x++){
                   if(board[x][y] == 0){
@@ -227,33 +219,26 @@ public class LevelBoard extends Level{
                   }
             }
          }
-         //Comb Mines
+         //Board
          for(int y = 0; y < height; y++){
               for(int x = 0; x < width; x++){
-                  if(mine[x][y] == 1){
+                  //Mines
+                  if(mine[x][y] == 1){       
                       if(y % 2 == 0){
                          screen.render((x * 8) + 50, (y * 8) + 50, 16, Colour.get(000, 000, 000, 500), 0);
                       } else{
                         screen.render((x * 8) + 54, (y * 8) + 50, 16, Colour.get(000, 000, 000, 500), 0);
-                      }     
+                      } 
                   }
-              }
-         }
-         //Comb Cover
-         for(int y = 0; y < height; y++){
-              for(int x = 0; x < width; x++){
+                  //Cover
                   if(cover[x][y] != 1){
                       if(y % 2 == 0){
                          screen.render((x * 8) + 50, (y * 8) + 50, 14, Colour.get(000, 500, 000, 500), 0);
                       } else{
                          screen.render((x * 8) + 54, (y * 8) + 50, 14, Colour.get(000, 500, 000, 500), 0);
                       }
-                 }
-              }
-         }
-         //Comb Flag
-         for(int y = 0; y < height; y++){
-              for(int x = 0; x < width; x++){
+                  }
+                  //Flag      
                   if(flag[x][y] == 1){
                       if(y % 2 == 0){
                          screen.render((x * 8) + 50, (y * 8) + 50, 8, Colour.get(000, 000, 000, 500), 0);
@@ -261,20 +246,16 @@ public class LevelBoard extends Level{
                          screen.render((x * 8) + 54, (y * 8) + 50, 8, Colour.get(000, 000, 000, 500), 0);
                       }
                   }
-              }
-         }       
-         //Comb Selection
-         for(int y = 0; y < height; y++){
-              for(int x = 0; x < width; x++){
+                  //Selection
                   if(selectedX == x && selectedY == y && game.alive == true){
                       if(y % 2 == 0){
                          screen.render((x * 8) + 50, (y * 8) + 50, 15, Colour.get(-1, 555, 222, 555), 0);
                       } else{
                           screen.render((x * 8) + 54, (y * 8) + 50, 15, Colour.get(-1, 555, 222, 555), 0);
                       }
-                  }
-              }
+                  }      
+                }
+             }
          }
-    }
     }         
 }

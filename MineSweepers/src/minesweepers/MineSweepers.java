@@ -26,7 +26,7 @@ import minesweepers.Menus.WonMenu;
 
 public class MineSweepers extends Canvas implements Runnable{
     private static final long serialVersionUID = 1L;
-    public static final String APP = "MineSweeper Prototype";
+    public static final String APP = "MineSweeper";
     public static final String ICON = "/Logo.png";
     private static final int WIDTH  = 200;
     private static final int HEIGHT = 200;
@@ -35,6 +35,7 @@ public class MineSweepers extends Canvas implements Runnable{
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
     private int[] colours = new int[256];
     private Input input = new Input(this);
+    private Mouse mouse = new Mouse(this);
     private int tickCount = 0;
     private Screen screen;
     private Menu menu;
@@ -49,6 +50,7 @@ public class MineSweepers extends Canvas implements Runnable{
     public int boardSize = 9;
     public int mines = 10;
     public int levelNumber = 1;
+    public boolean won = false;
     //Mode
     public boolean mode = false;
     public boolean colourmode = false;
@@ -87,7 +89,7 @@ public class MineSweepers extends Canvas implements Runnable{
         this.menu = menu;
         if(menu != null){
             //Init Menu with input 
-            menu.init(this, input);
+            menu.init(this, input, mouse);
         }
     }  
     //Set Menu
@@ -96,12 +98,42 @@ public class MineSweepers extends Canvas implements Runnable{
         if(level != null){
             //Init Menu with input 
             level.init(boardSize, boardSize, levelNumber, this, input);
+            level.setMine(mines);
+            level.setBoardNumber();
         }
+    }
+    //Mine
+    public int mineNumber(int size){
+        if(size == 9){
+            mines = 10;
+        }
+        
+        if(size == 10){
+            mines = 12;
+        }
+        
+        if(size == 11){
+            mines = 15;
+        }
+        
+        if(size == 12){
+            mines = 20;
+        }
+        
+        if(size == 13){
+            mines = 25;
+        }
+        
+        if(size == 16){
+            mines = 40;
+        }
+        return 1;
     }
     //Win
     public void won(){
         //Won menu 
-        setMenu(new WonMenu(levelNumber, time, score));  
+        won = true;
+        setMenu(new WonMenu());  
     }
     //Lost 
     public void lost(){
@@ -121,16 +153,16 @@ public class MineSweepers extends Canvas implements Runnable{
     }
     //reset
     public void reset(){ 
-        mines = 10;
+        alive = true;
+        time = 0;
+        score = 0;
+        levelNumber = 1;
         //Reset Level  
         if(colourmode){
             setBoard(new LevelColour());
         } else{
             setBoard(new LevelBoard());      
         }
-        alive = true;
-        time = 0;
-        score = 0;
     }
     //next Level
     public void nextLevel(){
@@ -179,7 +211,7 @@ public class MineSweepers extends Canvas implements Runnable{
                 lastTimer1 += 1000;
                 //Print the FPS
 		System.out.println(ticks + " ticks, " + frames + " fps");
-                if(alive){
+                if(alive & won == false){
                     time += 1;
                 }
 		frames = 0;
@@ -191,6 +223,7 @@ public class MineSweepers extends Canvas implements Runnable{
     public void ticks(){
         tickCount++;
         input.tick();
+        mouse.tick();
         if(menu != null){
             menu.tick();
         } else{

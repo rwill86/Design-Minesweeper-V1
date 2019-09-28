@@ -109,7 +109,6 @@ public class LevelColour extends Level{
                 Music.board.stop();
                 showMine();
                 game.lost();  
-                 Music.bomb.loop();
             } else{
                 Music.click.play();
                 unCoverColour(selectedX, selectedY);      

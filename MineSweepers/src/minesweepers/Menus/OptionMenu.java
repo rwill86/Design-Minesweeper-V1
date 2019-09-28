@@ -10,7 +10,7 @@ public class OptionMenu extends Menu{
     private int subselection = 0;
     private boolean selected = false;
     private String[] options = {"Board Size", "Menu"};
-    private int[] numbers = {5, 9, 10, 11, 12, 16};
+    private int[] numbers = {9, 10, 11, 12, 13, 16};
     public OptionMenu(){       
     }
     //Tick 
@@ -64,7 +64,7 @@ public class OptionMenu extends Menu{
             } else{
                 selected = false;
                 game.boardSize = numbers[subselection];
-                game.mines = numbers[subselection];
+                game.mineNumber(game.boardSize);
             }
         }
     }

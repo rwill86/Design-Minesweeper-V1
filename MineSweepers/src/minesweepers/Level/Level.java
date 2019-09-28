@@ -49,8 +49,6 @@ public class Level{
               }
          }
         k = random.nextInt(3);
-        setMine(mines);
-        setBoardNumber();
         setColour();
     }
     //Ticks
@@ -135,60 +133,24 @@ public class Level{
          cover[x][y] = 1;
     }
     //unCover
-    public void unCover(int x, int y){  
-        if(board[x][y] == 0){
-            if(validMove(x - 1, y) && checkMine(x - 1, y) == false){
-                if(board[x - 1][y] == 0){
-                    cover[x - 1][y] = 1;        
-                }
-            }
+    public boolean unCover(int x, int y){  
+        if(validMove(x, y)){
+            return false;
+        } 
         
-            if(validMove(x + 1, y) && checkMine(x + 1, y) == false){
-                if(board[x + 1][y] == 0){
-                    cover[x + 1][y] = 1;
-                    unCover(x + 1, y);
-                }  
-            }
-        
-            if(validMove(x, y - 1) && checkMine(x, y - 1) == false){
-                if(board[x][y - 1] == 0){
-                   cover[x][y - 1] = 1; 
-                }
-            }
-        
-            if(validMove(x, y + 1) && checkMine(x, y + 1) == false){
-                if(board[x][y + 1] == 0){
-                    cover[x][y + 1] = 1;
-                    unCover(x, y + 1);
-                }  
-            }
-        
-            if(validMove(x - 1, y + 1) && checkMine(x - 1, y + 1) == false){
-                if(board[x - 1][y + 1] == 0){
-                    cover[x - 1][y + 1] = 1;
-                }  
-            }
-        
-            if(validMove(x - 1, y - 1) && checkMine(x - 1, y - 1) == false){
-                if(board[x - 1][y - 1] == 0){
-                    cover[x - 1][y - 1] = 1;
-                }  
-            }
-        
-            if(validMove(x + 1, y + 1) && checkMine(x + 1, y + 1) == false){
-                if(board[x + 1][y + 1] == 0){
-                    cover[x + 1][y + 1] = 1;
-                    unCover(x + 1, y + 1);
-                    
-                }  
-            }
-        
-            if(validMove(x + 1, y - 1) && checkMine(x + 1, y - 1) == false){
-                if(board[x + 1][y - 1] == 0){
-                    cover[x + 1][y - 1] = 1;
-                }  
-            }
+        if(checkMine(x, y)){
+            return false;
         }
+        
+        if(board[x][y] != 0){
+            cover[x][y] = 1;
+            return false;
+        } 
+        cover[x][y] = 1;
+        unCover(x + 1, y);
+        unCover(x, y + 1);
+        unCover(x + 1, y + 1);
+        return false;
     }
     //Check Cover
     public boolean checkCover(int x, int y){
@@ -198,9 +160,9 @@ public class Level{
              return false;
          }
     }   
-    //valid Move
+    //Valid Move Range
     public boolean validMove(int x, int y){
-        return (x >= 0) && (x < width) && (y >= 0) && (y < height); 
+        return x <= -1 || x >= width || y <= -1 || y >= height; 
     }
     //Set Board Numbers
     public void setBoardNumber(){
@@ -215,37 +177,38 @@ public class Level{
     public int setNumber(int x, int y){
         int count = 0;
         
-        if(validMove(x - 1, y) && checkMine(x - 1, y)){
+        if(validMove(x - 1, y) == false && checkMine(x - 1, y)){
             count++;
         }
         
-        if(validMove(x + 1, y) && checkMine(x + 1, y)){
+        if(validMove(x + 1, y) == false && checkMine(x + 1, y)){
             count++;
         }
         
-        if(validMove(x, y - 1) && checkMine(x, y - 1)){
+        if(validMove(x, y - 1) == false && checkMine(x, y - 1)){
             count++;
         }
         
-        if(validMove(x, y + 1) && checkMine(x, y + 1)){
+        if(validMove(x, y + 1) == false && checkMine(x, y + 1)){
             count++;
         }
         
-        if(validMove(x - 1, y + 1) && checkMine(x - 1, y + 1)){
+        if(validMove(x - 1, y + 1) == false && checkMine(x - 1, y + 1)){
             count++;
         }
         
-        if(validMove(x - 1, y - 1) && checkMine(x - 1, y - 1)){
+        if(validMove(x - 1, y - 1) == false && checkMine(x - 1, y - 1)){
             count++;
         }
         
-        if(validMove(x + 1, y + 1) && checkMine(x + 1, y + 1)){
+        if(validMove(x + 1, y + 1) == false && checkMine(x + 1, y + 1)){
             count++;
         }
         
-        if(validMove(x + 1, y - 1) && checkMine(x + 1, y - 1)){
+        if(validMove(x + 1, y - 1) == false && checkMine(x + 1, y - 1)){
             count++;
         }
+        //Return count;
         return count;
     }
     //Render Face

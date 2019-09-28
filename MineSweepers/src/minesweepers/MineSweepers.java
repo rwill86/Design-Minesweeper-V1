@@ -18,6 +18,8 @@ import minesweepers.GUI.Font;
 import minesweepers.GUI.Screen;
 import minesweepers.GUI.SpriteSheet;
 import minesweepers.Level.Level;
+import minesweepers.Level.LevelBoard;
+import minesweepers.Level.LevelColour;
 import minesweepers.Menus.Menu;
 import minesweepers.Menus.TitleMenu;
 import minesweepers.Menus.WonMenu;
@@ -25,7 +27,7 @@ import minesweepers.Menus.WonMenu;
 public class MineSweepers extends Canvas implements Runnable{
     private static final long serialVersionUID = 1L;
     public static final String APP = "MineSweeper Prototype";
-    public static final String ICON = "";
+    public static final String ICON = "/Logo.png";
     private static final int WIDTH  = 200;
     private static final int HEIGHT = 200;
     private static final int SCALE = 3;
@@ -44,11 +46,12 @@ public class MineSweepers extends Canvas implements Runnable{
     public boolean run;
     public boolean pause;
     //Board Size
-    public int boardSize = 10;
+    public int boardSize = 9;
     public int mines = 10;
     public int levelNumber = 1;
     //Mode
-    public boolean mode = true;
+    public boolean mode = false;
+    public boolean colourmode = false;
     //State
     public boolean alive = true;
     //Init
@@ -72,11 +75,11 @@ public class MineSweepers extends Canvas implements Runnable{
 	}
         //Init screen
         try {
-           screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(MineSweepers.class.getResourceAsStream("/icons.png"))));
+           screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(MineSweepers.class.getResourceAsStream("/Icons.png"))));
         } catch(IOException e){
-            e.printStackTrace();
-         }
-        reset();
+            System.out.println(e);
+            exit();
+        }
         setMenu(new TitleMenu());
     }
     //Set Menu
@@ -85,6 +88,14 @@ public class MineSweepers extends Canvas implements Runnable{
         if(menu != null){
             //Init Menu with input 
             menu.init(this, input);
+        }
+    }  
+    //Set Menu
+    public void setBoard(Level level){
+        this.level = level;
+        if(level != null){
+            //Init Menu with input 
+            level.init(boardSize, boardSize, levelNumber, this, input);
         }
     }
     //Win
@@ -109,20 +120,21 @@ public class MineSweepers extends Canvas implements Runnable{
         System.exit(0);
     }
     //reset
-    public void reset(){     
-        //Reset Level
-        level = new Level(boardSize, boardSize, levelNumber, input, this);
-        level.setMine(mines);
-        level.setBoardNumber();
+    public void reset(){ 
+        mines = 10;
+        //Reset Level  
+        if(colourmode){
+            setBoard(new LevelColour());
+        } else{
+            setBoard(new LevelBoard());      
+        }
         alive = true;
         time = 0;
-        score = 0;         
+        score = 0;
     }
     //next Level
     public void nextLevel(){
         levelNumber++;
-        mines = mines * levelNumber;
-        boardSize = boardSize * levelNumber;
         reset();
         setMenu(null);
     }
@@ -194,13 +206,11 @@ public class MineSweepers extends Canvas implements Runnable{
             requestFocus();
 	    return;
 	}   
-        //Render Level Background
-        level.renderBackground(screen);
-        //Render Level Board
-        if(mode){
-            level.renderCombBoard(screen);
-        } else{
-            level.renderBoard(screen);
+        if(level != null){
+            //Render Level Background
+           level.renderBackground(screen);
+           //Render Level Board
+           level.renderBoard(screen);
         }
         //Render GUI
         renderGUI();
@@ -231,12 +241,18 @@ public class MineSweepers extends Canvas implements Runnable{
             //menu screen 
             menu.render(screen);
         } else{
-             //GUI of score and time 
-             level.renderFace(screen);
-             Font.draw("Score : " + score, screen, screen.width - 80, screen.height - 8, Colour.get(000, 555, 555, 555));
-             Font.draw("Time : " + time, screen, 10, screen.height - 8, Colour.get(000, 555, 555, 555));
-        }
-       
+             if(colourmode == false){
+                for(int j = 0; j < 10; j++){
+                    for(int i = 0; i < 25; i++){
+                        screen.render(i * 8, screen.height - 14 + j * 8, 10, Colour.get(000, 400, 400, 400), 0);
+                    }
+                }
+                //GUI of score and time 
+                level.renderFace(screen);
+                Font.draw("Score:" + score, screen, (screen.width / 2) - 96, screen.height - 10, Colour.get(000, 555, 555, 555));
+                Font.draw("Time:" + time, screen, (screen.width / 2) + 16, screen.height - 10, Colour.get(000, 555, 555, 555));
+             }
+        }   
     }
     //Main 
     public static void main(String[] args){
@@ -250,8 +266,8 @@ public class MineSweepers extends Canvas implements Runnable{
         JFrame frame = new JFrame(APP);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        //Add icon 
-        frame.setIconImage(new ImageIcon(game.ICON).getImage());
+        //Add icon  
+        frame.setIconImage(new ImageIcon(MineSweepers.class.getResource(game.ICON)).getImage());
         //Add game to frame 
         frame.add(game, BorderLayout.CENTER);
         frame.pack();

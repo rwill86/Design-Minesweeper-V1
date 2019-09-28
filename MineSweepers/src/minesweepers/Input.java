@@ -116,7 +116,7 @@ public class Input implements KeyListener{
             flag.toggle(pressed);
         } 
         
-        if(e.getKeyCode() == KeyEvent.VK_Q){
+        if(e.getKeyCode() == KeyEvent.VK_P){
             pause.toggle(pressed);
         } 
         

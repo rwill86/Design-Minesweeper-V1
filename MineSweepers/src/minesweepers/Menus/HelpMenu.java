@@ -6,7 +6,6 @@ package minesweepers.Menus;
 import minesweepers.GUI.Colour;
 import minesweepers.GUI.Font;
 import minesweepers.GUI.Screen;
-import minesweepers.Music;
 
 
 public class HelpMenu extends Menu{

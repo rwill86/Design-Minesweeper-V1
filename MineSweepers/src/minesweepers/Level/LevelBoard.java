@@ -77,7 +77,7 @@ public class LevelBoard extends Level{
         }
         //Input enter
         if(input.enter.clicked){
-            //Check if Mine Exist
+            //Check player is alive
             if(game.alive == false){
                 Music.bomb.stop();
                 game.setMenu(new LostMenu());
@@ -86,7 +86,9 @@ public class LevelBoard extends Level{
             if(checkMine(selectedX, selectedY)){
                 Music.board.stop();
                 flag[selectedX][selectedY] = 0;
-                showMine();
+                //Show Board
+                showBoard();
+                //Lost Game
                 game.lost();             
             } else{
                 //check if cover is empty

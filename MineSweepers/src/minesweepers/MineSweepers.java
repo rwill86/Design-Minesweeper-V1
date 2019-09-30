@@ -9,7 +9,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -51,6 +56,8 @@ public class MineSweepers extends Canvas implements Runnable{
     public int mines = 10;
     public int levelNumber = 1;
     public boolean won = false;
+    public String fileName = "/scr/res/score.txt";
+    public int[] scoreList;
     //Mode
     public boolean mode = false;
     public boolean colourmode = false;
@@ -89,7 +96,7 @@ public class MineSweepers extends Canvas implements Runnable{
         this.menu = menu;
         if(menu != null){
             //Init Menu with input 
-            menu.init(this, input, mouse);
+            menu.init(this, input);
         }
     }  
     //Set Menu
@@ -100,6 +107,7 @@ public class MineSweepers extends Canvas implements Runnable{
             level.init(boardSize, boardSize, levelNumber, this, input);
             level.setMine(mines);
             level.setBoardNumber();
+            level.setColour();
         }
     }
     //Mine
@@ -128,6 +136,31 @@ public class MineSweepers extends Canvas implements Runnable{
             mines = 40;
         }
         return 1;
+    }
+    //Open
+    public void open(){
+        System.out.println("Opening.");
+         try{
+             FileReader r = new FileReader(fileName);
+             BufferedReader bufferedReader = new BufferedReader(r);
+             String line;
+             while((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+             }   
+             bufferedReader.close();     
+         } catch(IOException ex){
+             System.out.println(ex);
+         }
+    }
+    //Save
+    public void save(String name, int s){
+         System.out.println("Saving.");
+         try{
+             FileWriter w = new FileWriter(fileName);
+             w.write(name + " " + s);
+         } catch(IOException ex){
+             System.out.println(ex);
+         }
     }
     //Win
     public void won(){
@@ -284,7 +317,7 @@ public class MineSweepers extends Canvas implements Runnable{
                 level.renderFace(screen);
                 Font.draw("Score:" + score, screen, (screen.width / 2) - 96, screen.height - 10, Colour.get(000, 555, 555, 555));
                 Font.draw("Time:" + time, screen, (screen.width / 2) + 16, screen.height - 10, Colour.get(000, 555, 555, 555));
-             }
+             } 
         }   
     }
     //Main 

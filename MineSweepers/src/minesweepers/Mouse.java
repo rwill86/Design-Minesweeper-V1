@@ -5,7 +5,6 @@ package minesweepers;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import minesweepers.Menus.OptionMenu;
 import minesweepers.Menus.TitleMenu;
 
 public class Mouse implements MouseListener{

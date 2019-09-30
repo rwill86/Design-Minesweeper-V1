@@ -1,7 +1,6 @@
 
 package minesweepers.Level;
 
-import java.util.Random;
 import minesweepers.GUI.Colour;
 import minesweepers.GUI.Screen;
 import minesweepers.Menus.LostMenu;
@@ -34,22 +33,19 @@ public class LevelColour extends Level{
                     }
               }
         }
-        //Cover 
+        //Board
         for(int y = 0; y < height; y++){
               for(int x = 0; x < width; x++){
+                    //Cover
                     if(cover[x][y] != 1){ 
                          screen.render((x * 8) + 50, (y * 8) + 50, 1, Colour.get(000, 000, 222, 222), 0);  
                     }
+                    //Selection
+                    if(selectedX == x && selectedY == y && game.alive == true){
+                        screen.render((x * 8) + 50,(y * 8) + 50, 1, Colour.get(-1, 555, 555, 555), 0);
+                    }
               }
         }
-        //Colour Selection
-        for(int y = 0; y < height; y++){
-              for(int x = 0; x < width; x++){
-                  if(selectedX == x && selectedY == y && game.alive == true){
-                        screen.render((x * 8) + 50,(y * 8) + 50, 1, Colour.get(-1, 555, 555, 555), 0);
-                  }
-              }
-         }
     }  
     //Ticks
     @Override
@@ -100,18 +96,23 @@ public class LevelColour extends Level{
         }      
         //Input enter
         if(input.enter.clicked){
-            //Check if Mine Exist
+            //Check player is alive
             if(game.alive == false){
                 game.setMenu(new LostMenu());
             }
-            //Check if Mine Exist
+            //Check if k Colour Exist
             if(checkColour(selectedX, selectedY)){
                 Music.board.stop();
-                showMine();
+                //Show Board
+                showBoard();
+                //Lost Game
                 game.lost();  
             } else{
                 Music.click.play();
-                unCoverColour(selectedX, selectedY);      
+                //Update score
+                game.score++;
+                int cur = colour[selectedX][selectedY];
+                unCoverColour(cur, selectedX, selectedY);      
             }
         } 
         //Check if won

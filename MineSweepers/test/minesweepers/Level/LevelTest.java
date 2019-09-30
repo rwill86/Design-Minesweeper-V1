@@ -161,7 +161,7 @@ public class LevelTest {
     public void testShowMine() {
         System.out.println("showMine");
         Level instance = new Level();
-        instance.showMine();
+        instance.showBoard();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -174,8 +174,9 @@ public class LevelTest {
         System.out.println("unCoverColour");
         int x = 0;
         int y = 0;
+        int c = 0;
         Level instance = new Level();
-        instance.unCoverColour(x, y);
+        instance.unCoverColour(c,x, y);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -202,7 +203,7 @@ public class LevelTest {
         System.out.println("checkCover");
         Level instance = new Level();
         boolean expResult = false;
-        boolean result = instance.checkCover();
+        boolean result = false;
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

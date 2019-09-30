@@ -6,7 +6,6 @@ import minesweepers.GUI.Colour;
 import minesweepers.GUI.Screen;
 import minesweepers.Input;
 import minesweepers.MineSweepers;
-import minesweepers.Music;
 
 // @author MrRit
 
@@ -25,7 +24,7 @@ public class Level{
     public int selectedX = 0;
     public int selectedY = 0;
     public int mines = 10;
-    public int k = 1;
+    public int k;
     //Init level
     public void init(int width, int height, int level, MineSweepers game, Input input){
         this.width = width;
@@ -48,8 +47,6 @@ public class Level{
                   colour[x][y] = 0;
               }
          }
-        k = random.nextInt(3);
-        setColour();
     }
     //Ticks
     public void tick(){    
@@ -98,10 +95,35 @@ public class Level{
     }
     //set Colour
     public void setColour(){
-         for(int i = 0; i < width; i++){
+         k = random.nextInt(3);
+         for(int i = 0; i < height; i++){
              for(int j = 0; j < width; j++){
                  int colourcode = random.nextInt(3);
                  colour[i][j] = colourcode; 
+             }
+         }
+         //Neightbourhood
+         for(int y = 0; y < height; y++){
+             for(int x = 0; x < width; x++){
+                 if(validMove(x - 1, y) == false && colour[x - 1][y] == colour[x][y]){      
+                    colour[x - 1][y] = random.nextInt(3);
+                 }
+        
+                 if(validMove(x + 1, y) == false && colour[x + 1][y] == colour[x][y]){
+                     colour[x + 1][y] = random.nextInt(3);
+                 }
+                 
+                 if(validMove(x, y + 1) == false && colour[x][y + 1] == colour[x][y]){
+                     colour[x][y + 1] = random.nextInt(3);
+                 }
+                 
+                 if(validMove(x, y - 1) == false && colour[x][y - 1] == colour[x][y]){
+                     colour[x][y - 1] = random.nextInt(3);
+                 }
+                 
+                 if(validMove(x + 1, y + 1) == false && colour[x + 1][y + 1] == colour[x][y]){
+                     colour[x + 1][y + 1] = random.nextInt(3);
+                 }
              }
          }
     } 
@@ -119,8 +141,8 @@ public class Level{
          }
          return false;
     }
-    //Show Mine
-    public void showMine(){
+    //Show Board
+    public void showBoard(){
         for(int y = 0; y < height; y++){
              for(int x = 0; x < width; x++){
                   cover[x][y] = 1;
@@ -128,9 +150,20 @@ public class Level{
          }
     }
     //uncover Colour
-    public void unCoverColour(int x, int y){
-         game.score++;
-         cover[x][y] = 1;
+    public boolean unCoverColour(int cur, int x, int y){
+        if(validMove(x, y)){
+            return false;
+        } 
+        
+        if(colour[x][y] != cur){
+            return false;
+        }
+        
+        cover[x][y] = 1;
+        unCoverColour(cur, x + 1, y);
+        unCoverColour(cur, x, y + 1);
+        unCoverColour(cur, x + 1, y + 1);
+        return false;
     }
     //unCover
     public boolean unCover(int x, int y){  

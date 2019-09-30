@@ -9,15 +9,14 @@ import minesweepers.MineSweepers;
 import minesweepers.Mouse;
 
 
-public class Menu {
+public class Menu{
     protected MineSweepers game;
     protected Input input;
     protected Mouse mouse;
     //Init Menu
-    public void init(MineSweepers game, Input input, Mouse mouse){
+    public void init(MineSweepers game, Input input){
         this.game = game;
         this.input = input;
-        this.mouse = mouse;
     }
     
     public void tick(){

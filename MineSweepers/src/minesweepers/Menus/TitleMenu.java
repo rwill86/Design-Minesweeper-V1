@@ -71,6 +71,7 @@ public class TitleMenu extends Menu{
             
               if(selection == 4){
                 //Score
+                game.max();
                 game.setMenu(new HighScoreMenu());
             }
             

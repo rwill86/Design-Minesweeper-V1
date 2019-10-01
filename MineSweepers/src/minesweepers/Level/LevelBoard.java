@@ -98,19 +98,19 @@ public class LevelBoard extends Level{
                     cover[selectedX][selectedY] = 1;
                     //Add to score
                     if(board[selectedX][selectedY] == 1){
-                        game.score += 1 + game.levelNumber;
+                        game.score += 1 * game.levelNumber;
                     }
                     
                     if(board[selectedX][selectedY] == 2){
-                        game.score += 2 + game.levelNumber;
+                        game.score += 2 * game.levelNumber;
                     }
                     
                     if(board[selectedX][selectedY] == 3){
-                        game.score += 3 + game.levelNumber;
+                        game.score += 3 * game.levelNumber;
                     }
                     
                     if(board[selectedX][selectedY] == 4){
-                        game.score += 4 + game.levelNumber;
+                        game.score += 4 * game.levelNumber;
                     }
                     //Check all 0 values
                     if(board[selectedX][selectedY] == 0){

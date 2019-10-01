@@ -4,10 +4,9 @@ package minesweepers.GUI;
  //@author MrRit
 
 public class Font{
-    private static String chars = "" + //
-			"ABCDEFGHIJKLMNOPQRSTUVWXYZ      " + //
-			"0123456789.,!?'\"-+=/\\%()<>:;     " + //
-			"";
+    private static String chars = "" + 
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZ      " + 
+			"0123456789.,!?'\"-+=/\\%()<>:;     ";
     //Draw Font 
     public static void draw(String text, Screen screen, int x, int y, int colour){
         text = text.toUpperCase();

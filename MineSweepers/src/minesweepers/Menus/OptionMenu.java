@@ -19,37 +19,37 @@ public class OptionMenu extends Menu{
         int size = options.length;
         int numbersize = numbers.length;
         if(selected == false){
-        if(selection > size){
-            selection = 0;
-        }
+            if(selection > size){
+               selection = 0;
+            }
         
-        if(selection < 0){
-            selection = size;
-        }
+            if(selection < 0){
+               selection = size;
+            }
         
-        if(input.up.clicked){
-            selection--;
-        }
+            if(input.up.clicked){
+               selection--;
+            }
         
-        if(input.down.clicked){
-            selection++;
-        }
+            if(input.down.clicked){
+               selection++;
+            }
         } else {
-        if(subselection > numbersize){
-            subselection = 0;
-        }
+            if(subselection > numbersize){
+               subselection = 0;
+            }
         
-        if(subselection < 0){
-            subselection = size;
-        }
+            if(subselection < 0){
+               subselection = size;
+            }
         
-        if(input.up.clicked){
-            subselection--;
-        }
+            if(input.up.clicked){
+               subselection--;
+            }
         
-        if(input.down.clicked){
-            subselection++;
-        }
+            if(input.down.clicked){
+               subselection++;
+            }
         }
         
         if(input.enter.clicked){

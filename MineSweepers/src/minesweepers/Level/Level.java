@@ -66,6 +66,10 @@ public class Level{
         }
         return false;
     }
+    //Won Colour
+    public void wonColour(){
+        
+    }
     //Set Flag
     public void setFlag(int x, int y){
         if(checkCover(x, y)){
@@ -145,6 +149,7 @@ public class Level{
     public void showBoard(){
         for(int y = 0; y < height; y++){
              for(int x = 0; x < width; x++){
+                  flag[x][y] = 0;
                   cover[x][y] = 1;
              }
          }

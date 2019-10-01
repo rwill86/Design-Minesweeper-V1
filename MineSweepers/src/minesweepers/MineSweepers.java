@@ -10,11 +10,14 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -25,6 +28,7 @@ import minesweepers.GUI.SpriteSheet;
 import minesweepers.Level.Level;
 import minesweepers.Level.LevelBoard;
 import minesweepers.Level.LevelColour;
+import minesweepers.Menus.AddScoreMenu;
 import minesweepers.Menus.Menu;
 import minesweepers.Menus.TitleMenu;
 import minesweepers.Menus.WonMenu;
@@ -56,12 +60,12 @@ public class MineSweepers extends Canvas implements Runnable{
     public int mines = 10;
     public int levelNumber = 1;
     public boolean won = false;
-    public String fileName = "/scr/res/score.txt";
-    public int[] scoreList;
+    public List<User> scoreList = new ArrayList();
+    public static final String fileName = "C:\\Users\\User\\Documents\\Don't Touch\\Game\\MineSweepers\\res\\Score.txt";
     //Mode
     public boolean mode = false;
     public boolean colourmode = false;
-    //State
+    //Alive State
     public boolean alive = true;
     //Init
     public void init(){
@@ -84,6 +88,9 @@ public class MineSweepers extends Canvas implements Runnable{
 	}
         //Init screen
         try {
+           //Open File
+           open();
+           //Get SpriteSheet
            screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(MineSweepers.class.getResourceAsStream("/Icons.png"))));
         } catch(IOException e){
             System.out.println(e);
@@ -99,7 +106,7 @@ public class MineSweepers extends Canvas implements Runnable{
             menu.init(this, input);
         }
     }  
-    //Set Menu
+    //Set Board
     public void setBoard(Level level){
         this.level = level;
         if(level != null){
@@ -137,35 +144,71 @@ public class MineSweepers extends Canvas implements Runnable{
         }
         return 1;
     }
-    //Open
+    //Open File
     public void open(){
-        System.out.println("Opening.");
-         try{
-             FileReader r = new FileReader(fileName);
-             BufferedReader bufferedReader = new BufferedReader(r);
-             String line;
-             while((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
-             }   
-             bufferedReader.close();     
+         try{   
+             File file = new File(fileName);
+             FileReader r = new FileReader(file);
+             try (BufferedReader br = new BufferedReader(r)){
+                 scoreList = new ArrayList();
+                 String line;
+                 while((line = br.readLine()) != null) {
+                     String[] user = line.split(" ");
+                     String name = user[0];
+                     int points = Integer.parseInt(user[1]);
+                     User u = new User(name, points);
+                     scoreList.add(u);
+                 }
+             }     
          } catch(IOException ex){
              System.out.println(ex);
          }
     }
-    //Save
-    public void save(String name, int s){
-         System.out.println("Saving.");
+    //Save Data to File
+    public void save(String name, int p){
+         User nu = new User(name, p);
+         scoreList.add(nu);
          try{
-             FileWriter w = new FileWriter(fileName);
-             w.write(name + " " + s);
+             File file = new File(fileName);
+             FileWriter w = new FileWriter(file);
+             try (BufferedWriter bw = new BufferedWriter(w)){
+                 for (User u : scoreList){
+                     bw.write(u.name + " " + u.points);
+                     bw.newLine();
+                 }
+             }
          } catch(IOException ex){
              System.out.println(ex);
          }
+    }
+    //Max Score
+    public void max(){
+        try{
+            for(int i = 0; i < scoreList.size(); i++){
+               for(int j = i + 1; j < scoreList.size(); j++){
+                    int s1 = scoreList.get(i).getScore();
+                    int s2 = scoreList.get(j).getScore();
+                    if(s2 > s1){
+                       Collections.swap(scoreList, i, j);
+                    }
+               }
+           }
+        } catch(Exception e){
+            System.out.println(e);
+        }
     }
     //Win
     public void won(){
         //Won menu 
         won = true;
+        //new Score
+        int ne = score;
+        for(User u : scoreList){
+            int s = u.getScore();
+            if(ne > s){
+                setMenu(new AddScoreMenu());
+            }
+        }     
         setMenu(new WonMenu());  
     }
     //Lost 

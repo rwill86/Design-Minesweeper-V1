@@ -23,7 +23,6 @@ public class Level{
     public int level;
     public int selectedX = 0;
     public int selectedY = 0;
-    public int mines = 10;
     public int k;
     //Init level
     public void init(int width, int height, int level, MineSweepers game, Input input){
@@ -67,8 +66,27 @@ public class Level{
         return false;
     }
     //Won Colour
-    public void wonColour(){
-        
+    public boolean wonColour(){
+        int kcount = 0;
+        int ccount = 0;
+        for(int y = 0; y < height; y++){
+             for(int x = 0; x < width; x++){
+                if(k == colour[x][y]){
+                    kcount++;
+                }            
+             }
+        }
+        for(int y = 0; y < height; y++){
+             for(int x = 0; x < width; x++){
+                if(cover[x][y] == 0){
+                    ccount++;
+                }            
+             }
+        }
+        if(kcount == ccount){
+            return true;
+        }
+        return false;
     }
     //Set Flag
     public void setFlag(int x, int y){
@@ -109,23 +127,23 @@ public class Level{
          //Neightbourhood
          for(int y = 0; y < height; y++){
              for(int x = 0; x < width; x++){
-                 if(validMove(x - 1, y) == false && colour[x - 1][y] == colour[x][y]){      
+                 if(validMove(x - 1, y) && colour[x - 1][y] == colour[x][y]){      
                     colour[x - 1][y] = random.nextInt(3);
                  }
         
-                 if(validMove(x + 1, y) == false && colour[x + 1][y] == colour[x][y]){
+                 if(validMove(x + 1, y) && colour[x + 1][y] == colour[x][y]){
                      colour[x + 1][y] = random.nextInt(3);
                  }
                  
-                 if(validMove(x, y + 1) == false && colour[x][y + 1] == colour[x][y]){
+                 if(validMove(x, y + 1) && colour[x][y + 1] == colour[x][y]){
                      colour[x][y + 1] = random.nextInt(3);
                  }
                  
-                 if(validMove(x, y - 1) == false && colour[x][y - 1] == colour[x][y]){
+                 if(validMove(x, y - 1) && colour[x][y - 1] == colour[x][y]){
                      colour[x][y - 1] = random.nextInt(3);
                  }
                  
-                 if(validMove(x + 1, y + 1) == false && colour[x + 1][y + 1] == colour[x][y]){
+                 if(validMove(x + 1, y + 1) && colour[x + 1][y + 1] == colour[x][y]){
                      colour[x + 1][y + 1] = random.nextInt(3);
                  }
              }
@@ -156,7 +174,7 @@ public class Level{
     }
     //uncover Colour
     public boolean unCoverColour(int cur, int x, int y){
-        if(validMove(x, y)){
+        if(validMove(x, y) == false){
             return false;
         } 
         
@@ -172,7 +190,7 @@ public class Level{
     }
     //unCover
     public boolean unCover(int x, int y){  
-        if(validMove(x, y)){
+        if(validMove(x, y) == false){
             return false;
         } 
         
@@ -185,6 +203,7 @@ public class Level{
             return false;
         } 
         cover[x][y] = 1;
+        flag[x][y] = 0;
         unCover(x + 1, y);
         unCover(x, y + 1);
         unCover(x + 1, y + 1);
@@ -200,7 +219,7 @@ public class Level{
     }   
     //Valid Move Range
     public boolean validMove(int x, int y){
-        return x <= -1 || x >= width || y <= -1 || y >= height; 
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
     //Set Board Numbers
     public void setBoardNumber(){
@@ -215,35 +234,35 @@ public class Level{
     public int setNumber(int x, int y){
         int count = 0;
         
-        if(validMove(x - 1, y) == false && checkMine(x - 1, y)){
+        if(validMove(x - 1, y) && checkMine(x - 1, y)){
             count++;
         }
         
-        if(validMove(x + 1, y) == false && checkMine(x + 1, y)){
+        if(validMove(x + 1, y) && checkMine(x + 1, y)){
             count++;
         }
         
-        if(validMove(x, y - 1) == false && checkMine(x, y - 1)){
+        if(validMove(x, y - 1) && checkMine(x, y - 1)){
             count++;
         }
         
-        if(validMove(x, y + 1) == false && checkMine(x, y + 1)){
+        if(validMove(x, y + 1) && checkMine(x, y + 1)){
             count++;
         }
         
-        if(validMove(x - 1, y + 1) == false && checkMine(x - 1, y + 1)){
+        if(validMove(x - 1, y + 1) && checkMine(x - 1, y + 1)){
             count++;
         }
         
-        if(validMove(x - 1, y - 1) == false && checkMine(x - 1, y - 1)){
+        if(validMove(x - 1, y - 1) && checkMine(x - 1, y - 1)){
             count++;
         }
         
-        if(validMove(x + 1, y + 1) == false && checkMine(x + 1, y + 1)){
+        if(validMove(x + 1, y + 1) && checkMine(x + 1, y + 1)){
             count++;
         }
         
-        if(validMove(x + 1, y - 1) == false && checkMine(x + 1, y - 1)){
+        if(validMove(x + 1, y - 1) && checkMine(x + 1, y - 1)){
             count++;
         }
         //Return count;
@@ -259,21 +278,6 @@ public class Level{
     }
     //Render Background
     public void renderBackground(Screen screen){
-        screen.clear(0);
-        if(game.colourmode == false){
-            //Border
-            for(int y = -1; y < height + 1; y++){
-                 for(int x = -1; x < width + 1; x++){
-                     screen.render((x * 8) + 50, (y * 8) + 50, 10, Colour.get(000, 400, 400, 400), 0);
-                 }     
-            }
-        } else {
-            for(int y = -1; y <= height; y++){
-                 for(int x = -1; x <= width ; x++){
-                     screen.render((x * 8) + 50, (y * 8) + 50, 10, Colour.get(000, 222, 222, 222), 0);
-                 }     
-            }
-        }
     }
     //Render Board
     public void renderBoard(Screen screen){

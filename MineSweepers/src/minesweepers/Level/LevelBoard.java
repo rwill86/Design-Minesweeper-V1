@@ -126,7 +126,27 @@ public class LevelBoard extends Level{
         if(won()){
             game.won();
         }     
-    }   
+    } 
+    //Background
+    @Override
+    public void renderBackground(Screen screen){
+        screen.clear(0);
+        //Background of Board
+        if(game.mode == false){
+            for(int y = -1; y < height + 1; y++){
+                for(int x = -1; x < width + 1; x++){
+                    screen.render((x * 8) + 50, (y * 8) + 50, 10, Colour.get(000, 400, 400, 400), 0);
+                }     
+             }
+        } else{
+            for(int y = -1; y < height + 1; y++){
+                for(int x = -1; x < width + 1; x++){
+                    screen.render((x * 8) + 50, (y * 8) + 50, 17, Colour.get(000, 400, 400, 400), 0);
+                }     
+            }
+        }
+       
+    }       
     //Render Board
     @Override
     public void renderBoard(Screen screen){

@@ -57,10 +57,14 @@ public class MineSweepers extends Canvas implements Runnable{
     public boolean pause;
     //Board Size
     public int boardSize = 9;
+    //Mine Size
     public int mines = 10;
+    //Level
     public int levelNumber = 1;
     public boolean won = false;
+    //Score List
     public List<User> scoreList = new ArrayList();
+    //File Name
     public static final String fileName = "C:\\Users\\User\\Documents\\Don't Touch\\Game\\MineSweepers\\res\\Score.txt";
     //Mode
     public boolean mode = false;
@@ -88,7 +92,7 @@ public class MineSweepers extends Canvas implements Runnable{
 	}
         //Init screen
         try {
-           //Open File
+           //Open file
            open();
            //Get SpriteSheet
            screen = new Screen(WIDTH, HEIGHT, new SpriteSheet(ImageIO.read(MineSweepers.class.getResourceAsStream("/Icons.png"))));
@@ -119,6 +123,7 @@ public class MineSweepers extends Canvas implements Runnable{
     }
     //Mine
     public int mineNumber(int size){
+        //Easy to Hard
         if(size == 9){
             mines = 10;
         }
@@ -132,15 +137,15 @@ public class MineSweepers extends Canvas implements Runnable{
         }
         
         if(size == 12){
-            mines = 20;
+            mines = 17;
         }
         
         if(size == 13){
-            mines = 25;
+            mines = 20;
         }
         
         if(size == 16){
-            mines = 40;
+            mines = 30;
         }
         return 1;
     }
@@ -172,9 +177,14 @@ public class MineSweepers extends Canvas implements Runnable{
              File file = new File(fileName);
              FileWriter w = new FileWriter(file);
              try (BufferedWriter bw = new BufferedWriter(w)){
+                 int s = 0;
                  for (User u : scoreList){
+                     if(s > 5){
+                         break;
+                     }
                      bw.write(u.name + " " + u.points);
                      bw.newLine();
+                     s++;
                  }
              }
          } catch(IOException ex){
@@ -201,15 +211,25 @@ public class MineSweepers extends Canvas implements Runnable{
     public void won(){
         //Won menu 
         won = true;
+        //Score
+        max();
         //new Score
+        boolean n = false;
         int ne = score;
-        for(User u : scoreList){
-            int s = u.getScore();
-            if(ne > s){
-                setMenu(new AddScoreMenu());
-            }
-        }     
-        setMenu(new WonMenu());  
+        //Search Score List
+        for (User u : scoreList){
+             int s = u.getScore();
+             if(s > ne){
+                 n = true;
+             }
+        }
+       
+        if(n == false){
+            setMenu(new WonMenu());  
+        } else{
+            //Add a new Score
+            setMenu(new AddScoreMenu());
+        }
     }
     //Lost 
     public void lost(){
@@ -233,6 +253,7 @@ public class MineSweepers extends Canvas implements Runnable{
         time = 0;
         score = 0;
         levelNumber = 1;
+        won = false;
         //Reset Level  
         if(colourmode){
             setBoard(new LevelColour());
@@ -242,8 +263,10 @@ public class MineSweepers extends Canvas implements Runnable{
     }
     //next Level
     public void nextLevel(){
-        levelNumber++;
+        int cur = levelNumber;
         reset();
+        cur++;
+        levelNumber = cur;
         setMenu(null);
     }
     //begin

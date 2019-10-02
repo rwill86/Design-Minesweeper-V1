@@ -12,7 +12,18 @@ import minesweepers.Music;
 public class LevelColour extends Level{
     public LevelColour(){
          Music.board.loop();
-    }  
+    } 
+    //Colour Background
+    @Override
+    public void renderBackground(Screen screen){
+        screen.clear(0);
+        //Background of Board
+        for(int y = -1; y <= height; y++){
+             for(int x = -1; x <= width ; x++){
+                screen.render((x * 8) + 50, (y * 8) + 50, 17, Colour.get(000, 000, 222, 222), 0);
+             }     
+        }
+    }
     //Colour Board Render
     @Override
     public void renderBoard(Screen screen){
@@ -116,7 +127,7 @@ public class LevelColour extends Level{
             }
         } 
         //Check if won
-        if(won()){
+        if(wonColour()){
             game.won();
         }     
     }  
